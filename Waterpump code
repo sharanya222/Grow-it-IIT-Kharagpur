@@ -1,0 +1,65 @@
+int pushButton1 = 2;
+int pushButton2 = 3;
+int pushButton3 = 4;
+int pushButton4 = 5;
+int pushButton5 = 6;
+int pushButton6 = 7;
+#define motor1  8
+#define motor2  9
+#define motor3  10
+// the setup routine runs once when you press reset:
+void setup() {
+  // initialize serial communication at 9600 bits per second:
+  Serial.begin(9600);
+  // make the pushbutton's pin an input:
+  pinMode(pushButton1, INPUT);
+ pinMode(pushButton2, INPUT);
+  pinMode(pushButton3, INPUT);
+ pinMode(pushButton4, INPUT);
+  pinMode(pushButton5, INPUT);
+ pinMode(pushButton6, INPUT);
+   pinMode(motor1, OUTPUT);
+   pinMode(motor2, OUTPUT);
+   pinMode(motor3, OUTPUT);
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  // read the input pin:
+  int buttonState1 = digitalRead(pushButton1);
+ int buttonState2 = digitalRead(pushButton2);
+ int buttonState3 = digitalRead(pushButton3);
+ int buttonState4 = digitalRead(pushButton4);
+ int buttonState5 = digitalRead(pushButton5);
+ int buttonState6 = digitalRead(pushButton6);
+  // print out the state of the button:
+//  Serial.println(buttonState1);
+  delay(1);    
+  if( buttonState1 == 0 &&  buttonState2 == 0 )
+  {
+    digitalWrite(motor1, HIGH);
+  }
+  // delay in between reads for stability
+  else if(buttonState1 == 1 &&  buttonState2 == 1)
+      {
+    digitalWrite(motor1, LOW);
+  }
+  if( buttonState3 == 0 &&  buttonState4 == 0 )
+  {
+    digitalWrite(motor2, HIGH);
+  }
+  // delay in between reads for stability
+  else if(buttonState3 == 1 &&  buttonState4 == 1)
+      {
+    digitalWrite(motor2, LOW);
+  }
+  if( buttonState5 == 0 &&  buttonState6 == 0 )
+  {
+    digitalWrite(motor3, HIGH);
+  }
+  // delay in between reads for stability
+  else if (buttonState5 == 1 &&  buttonState6 == 1)
+      {
+    digitalWrite(motor3, LOW);
+  }
+}
