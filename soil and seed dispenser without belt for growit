@@ -1,0 +1,95 @@
+#include <Servo.h>
+
+Servo servo_obj; // servo object for fish tank
+
+#define ultras 3 // ultra sonic for soil dispencer
+#define ultragm 10 // ultra sonic for seed dispencer
+#define servo 9 // servo for sand dispencer
+#define gearm 4// gear motor for seed dispencer
+
+int ds1,ds2,t,d; //ds1- distance at servo, ds2- distance at gear motor
+int distance(int x)
+{
+  d=0,t=0;
+  delay(500);
+  pinMode(x,OUTPUT);
+  digitalWrite(x,LOW);
+  delayMicroseconds(2);
+  digitalWrite(x,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(x,LOW);
+  pinMode(x,INPUT);
+  t=pulseIn(x,HIGH);
+  d=0.034*t/2;
+  Serial.println("distance1:"+String(d)+" Cm");
+  return d;
+}
+
+void sangle()
+
+{
+   servo_obj.write(60);
+   delay(2000);
+   servo_obj.write(0);
+   delay(200);
+}
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(gearm,OUTPUT);
+  servo_obj.attach(servo);
+  servo_obj.write(0); // initial angle zero
+  digitalWrite(gearm,LOW);
+}
+void loop() 
+{
+
+  ds1=distance(ultras);
+  Serial.println("distance at soil dispencer:"+String(ds1)+" Cm");
+  ds2=distance(ultragm);
+  Serial.println("distance at seed dispencer:"+String(ds2)+" Cm");
+  delay(500);
+  if(ds1 < 10 )
+  {
+   Serial.println("soil dispencing");
+   sangle();
+   while(distance(ultras) < 10)
+   {
+     servo_obj.write(0);
+     Serial.println("distance at soil :"+String(distance(ultras)));
+     Serial.println("soil dispencing is done");
+     delay(500);
+   }
+  }
+  else
+  {
+    servo_obj.write(0);
+    Serial.println("servo angle zero");
+    delay(500);
+  }
+  
+  if(ds2 < 10 )
+  {
+   Serial.println("seeds dispencing");
+   digitalWrite(gearm,HIGH);
+   delay(300);
+   digitalWrite(gearm,LOW);
+   delay(1000); // wait for 1 sec
+   
+   while(distance(ultragm) < 10)
+   {
+     digitalWrite(gearm,LOW);
+     Serial.println("distance at seed:"+String(distance(ultragm)));
+     Serial.println("seeding is done");
+     delay(500);
+   }
+  }
+  else
+  {
+    Serial.println("Motor stop");
+    digitalWrite(gearm,LOW);
+    delay(500);
+  }
+  Serial.println("***********************************************************");
+}
