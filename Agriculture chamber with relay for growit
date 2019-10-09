@@ -1,0 +1,93 @@
+/* Motors */
+#define mtpin 4 // Motor top positive pin
+#define mbpin 5 // Motor top negative pin
+/* Stopper Switche */
+#define sstpin 2 // Stoper switch right 
+#define ssbpin 3 // Stoper switch left
+/* Ultrasonic sensor */
+#define urpin 6 // ultrasonic sensor right
+#define ulpin 7 // ultrasonic sensor right
+/* led pins */
+#define llpin 8 // left led
+#define rlpin 9 // right led
+
+int sst_val, ssb_val, t, d, dr, dl;
+
+int distance(int spin)
+{
+  d = 0, t = 0;
+  pinMode(spin, OUTPUT);
+  digitalWrite(spin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(spin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(spin, LOW);
+  pinMode(spin, INPUT);
+  t = pulseIn(spin, HIGH);
+  d = 0.034 * t / 2;
+  Serial.println("distance :" + String(d));
+  return d;
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(mtpin, OUTPUT);
+  pinMode(mbpin, OUTPUT);
+  pinMode(sstpin, INPUT);
+  pinMode(ssbpin, INPUT);
+  pinMode(rlpin, OUTPUT);
+  pinMode(llpin, OUTPUT);
+  digitalWrite(mtpin, LOW);
+  digitalWrite(mbpin, LOW); 
+}
+
+void loop() {
+  sst_val = !digitalRead(sstpin);
+  ssb_val = !digitalRead(ssbpin);
+  Serial.println("top: "+String(sst_val) +   ",    buttom: "+String(ssb_val) );
+  
+  if (sst_val == 1 && ssb_val == 0) // top to buttom
+  {
+    digitalWrite(mtpin, LOW);
+    digitalWrite(mbpin, LOW);
+    delay(2000);
+    Serial.println("servilance moving from top to buttom");
+    digitalWrite(mtpin, LOW);
+    digitalWrite(mbpin, HIGH); 
+  }
+  if (sst_val == 0 && ssb_val == 1) // buttom to top
+  {
+    digitalWrite(mtpin, LOW);
+    digitalWrite(mbpin, LOW);
+    delay(2000);
+    Serial.println("servilance moving from buttom to top");
+    digitalWrite(mtpin, HIGH);
+    digitalWrite(mbpin, LOW);
+  }
+  dr = distance(urpin);
+  Serial.println("Right distance :" + String(dr));
+  dl = distance(ulpin);
+  Serial.println("Left distance :" + String(dl));
+  if (dr >= 20) // CONDITION FOR RIGHT ULTRASONIC
+  {
+    digitalWrite(rlpin, LOW);
+    Serial.println("Right led OFF");
+  }
+  else
+  {
+    digitalWrite(rlpin, HIGH);
+    Serial.println("Right led ON");
+  }
+  if (dl >= 20) // CONDITION FOR LEFT ULTRASONIC
+  {
+    digitalWrite(llpin, LOW);
+    Serial.println("Left led OFF");
+  }
+  else
+  {
+    digitalWrite(llpin, HIGH);
+    Serial.println("Left led ON");
+  }
+  Serial.println("********************* END ************************");
+  delay(1000);
+}
