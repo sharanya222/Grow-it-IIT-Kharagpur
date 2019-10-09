@@ -1,0 +1,76 @@
+#include <Servo.h>
+Servo fservo; // servo object for fish tank
+Servo cservo; // servo object for chemical tank
+/* Motors */
+#define mtpin 4 // Motor top positive pin
+#define mbpin 5 // Motor bottom positive pin
+/* Stopper Switche */
+#define ssrpin 7 // Stoper switch right 
+#define sslpin 8 // Stoper switch left
+/* servos */
+#define ftspin 10 // fish tank servo
+#define ctspin 11 // chemical tank servo
+
+int ssr_val,ssl_val;
+
+void mstop()
+{
+  digitalWrite(mtpin,LOW);
+  digitalWrite(mbpin,LOW);
+}
+
+void mrtl() // motor right to left
+{
+  digitalWrite(mtpin,LOW);
+  digitalWrite(mbpin,HIGH);
+  delay(2000);
+}
+void mltr() // motor right to left
+{
+  digitalWrite(mtpin,HIGH);
+  digitalWrite(mbpin,LOW);
+  delay(2000);
+}
+
+void sangle()
+{
+   fservo.write(45);
+   cservo.write(45);
+   delay(500);
+   fservo.write(0);
+   cservo.write(0);
+   delay(1000);
+}
+void setup() {
+  Serial.begin(9600);
+  pinMode(mtpin,OUTPUT);
+  pinMode(mbpin,OUTPUT);
+  pinMode(ssrpin,INPUT);
+  pinMode(sslpin,INPUT);
+  fservo.attach(ftspin);
+  cservo.attach(ctspin);
+  fservo.write(0);
+  cservo.write(0);
+  mrtl();
+}
+
+void loop() {
+  ssr_val = !digitalRead(ssrpin);
+  ssl_val = !digitalRead(sslpin);
+  Serial.println("Right stopper switch value"+String(ssr_val));
+  Serial.println("left stopper switch value"+String(ssl_val));
+  if(ssr_val == 1 && ssl_val== 0) // right to left
+  {
+   mstop();
+   delay(5000);
+   sangle();
+   mrtl();
+  }
+  if(ssr_val == 0 && ssl_val== 1) // left to right
+  {
+   mstop();
+   delay(5000);
+   sangle();
+   mltr();
+  }
+}
