@@ -1,0 +1,71 @@
+#define ft1 2 //fish tank transistor 1
+#define ft2 3 //fish tank transistor 2
+#define ct1 4 //chemical tank transistor 1
+#define ct2 5 //chemical tank transistor 2
+#define wt1 6//water tank transistor 1
+#define wt2 7 //water tank transistor 2
+#define fp  8 // fish tank pump
+#define cp  9 // chemical tank pump
+#define wp  10 // water tank pump
+
+int ftl_val,ft2_val,ct1_val,ct2_val,wt1_val,wt2_val;
+void setup() 
+{  
+ Serial.begin(9600);
+ pinMode(ft1, INPUT);
+ pinMode(ft2, INPUT);
+ pinMode(ct1, INPUT);
+ pinMode(ct2, INPUT);
+ pinMode(wt1, INPUT);
+ pinMode(wt2, INPUT);
+ pinMode(fp, OUTPUT);
+ pinMode(cp, OUTPUT);
+ pinMode(wp, OUTPUT);
+}
+
+
+void loop() {
+  // read the input pin:
+ int ft1_val = !digitalRead(ft1);
+ Serial.println("fish tank transistor_1:"+String(ft1_val));
+ int ft2_val = !digitalRead(ft2);
+ Serial.println("fish tank transistor_2:"+String(ft2_val));
+ int ct1_val = !digitalRead(ct1);
+ Serial.println("Chemical tank transistor_1:"+String(ct1_val));
+ int ct2_val = !digitalRead(ct2);
+ Serial.println("Chemical tank transistor_2:"+String(ct2_val));
+ int wt1_val = !digitalRead(wt1);
+ Serial.println("Water tank transistor_1:"+String(wt1_val));
+ int wt2_val = !digitalRead(wt2);
+ Serial.println("Water tank transistor_2:"+String(wt2_val));
+  // print out the state of the button:
+//  Serial.println(ft1_val);
+  delay(1);    
+  if( ft1_val == 1 &&  ft2_val == 1 )
+  {
+    digitalWrite(fp, HIGH);
+  }
+  // delay in between reads for stability
+  else if(ft1_val == 0 &&  ft2_val == 0)
+      {
+    digitalWrite(fp, LOW);
+  }
+  if( ct1_val == 1 &&  ct2_val == 1 )
+  {
+    digitalWrite(cp, HIGH);
+  }
+  // delay in between reads for stability
+  else if(ct1_val == 0 &&  ct2_val == 0)
+      {
+    digitalWrite(cp, LOW);
+  }
+  if( wt1_val == 1 &&  wt2_val == 1 )
+  {
+    digitalWrite(wp, HIGH);
+  }
+  // delay in between reads for stability
+  else if (wt1_val == 0 &&  wt2_val == 0)
+      {
+    digitalWrite(wp, LOW);
+  }
+}
